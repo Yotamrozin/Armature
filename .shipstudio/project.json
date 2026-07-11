@@ -1,9 +1,0 @@
-{
-  "_description": "Ship Studio project metadata. Auto-generated - safe to delete if needed, will be recreated.",
-  "schema_version": 3,
-  "publish": {
-    "staging": null,
-    "production": null
-  },
-  "last_opened": 1783716791426
-}
