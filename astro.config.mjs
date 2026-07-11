@@ -7,12 +7,17 @@ import sanity from '@sanity/astro';
 import react from '@astrojs/react';
 
 // astro.config runs in Node, where `.env` is NOT auto-loaded into process.env.
-// Load it explicitly so the Sanity integration gets projectId/dataset.
-const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET } = loadEnv(
-  process.env.NODE_ENV ?? 'development',
-  process.cwd(),
-  '',
-);
+// Locally these come from `.env` (gitignored). On Vercel there is no `.env` —
+// the values are set as project Environment Variables and injected into
+// process.env at build time. Read the .env file via loadEnv, then fall back to
+// process.env so a platform-provided value is always used. Without them the
+// prerendered /admin Studio route throws "Configuration must contain projectId"
+// and the build fails.
+const env = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), '');
+const PUBLIC_SANITY_PROJECT_ID =
+  env.PUBLIC_SANITY_PROJECT_ID ?? process.env.PUBLIC_SANITY_PROJECT_ID;
+const PUBLIC_SANITY_DATASET =
+  env.PUBLIC_SANITY_DATASET ?? process.env.PUBLIC_SANITY_DATASET;
 
 // Workaround for @sanity/astro on Astro 7 / Vite 8 (rolldown): the integration's
 // module-dedupe plugin aliases `sanity` to its package directory, and rolldown's
