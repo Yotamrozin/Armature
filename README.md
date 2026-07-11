@@ -6,6 +6,16 @@ npm create astro@latest -- --template minimal
 
 > 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
+## ✅ Deployment TODOs
+
+- [ ] **Add the production CORS origin in Sanity.** The embedded Studio at
+      `/admin` authenticates against the Sanity project, so every origin it runs
+      on must be allowed. `http://localhost:4321` is already added (with
+      credentials). Once there's a deploy URL, add it too — at
+      https://sanity.io/manage → project `i0455isx` → API → CORS origins — e.g.
+      `https://<your-app>.vercel.app`, **Allow credentials: on**. Without this,
+      the deployed Studio will fail to log in.
+
 ## 🚀 Project Structure
 
 Inside of your Astro project, you'll see the following folders and files:
