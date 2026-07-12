@@ -39,6 +39,9 @@ export default defineConfig({
     sanity({
       projectId: PUBLIC_SANITY_PROJECT_ID,
       dataset: PUBLIC_SANITY_DATASET,
+      // Recent API version so the draft perspective, source maps, and stega used
+      // by visual editing behave as documented (integration default is older).
+      apiVersion: '2025-02-19',
       // Embed Sanity Studio at /admin.
       studioBasePath: '/admin',
       useCdn: false,

@@ -1,7 +1,9 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
+import { presentationTool } from 'sanity/presentation';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './studio/schemaTypes';
+import { resolve } from './studio/presentation/locations';
 
 // Studio config for the Studio embedded at /admin (see astro.config.mjs).
 // Project credentials come from environment variables so they stay out of source.
@@ -54,6 +56,16 @@ export default defineConfig({
               (item) => !singletonTypes.has(item.getId() ?? ''),
             ),
           ]),
+    }),
+    // Click-to-edit visual editing. The preview site is same-origin (the Studio
+    // is embedded at /admin), so `origin` is omitted and defaults to the current
+    // origin — localhost in dev, the deployed domain in production.
+    presentationTool({
+      resolve,
+      previewUrl: {
+        preview: '/',
+        previewMode: { enable: '/api/draft-mode/enable' },
+      },
     }),
     visionTool(),
   ],

@@ -1,18 +1,30 @@
 ---
-import { sanityClient } from 'sanity:client';
+// Server-rendered so it can read the draft-mode cookie per request (visual
+// editing). Published visits render on demand too, which means content updates
+// appear without a rebuild.
+export const prerender = false;
+
+import { loadQuery } from '../lib/sanity/loadQuery';
+import { getPerspectiveCookie } from '../lib/sanity/draftMode';
 import { urlFor } from '../lib/sanity/image';
 import { blockComponents } from '../lib/blocks';
+import { VisualEditing } from '@sanity/astro/visual-editing';
 
-// Homepage singleton, read by its fixed id (see sanity.config.ts). Static by
-// default: this fetch runs at build time, so publishing in the Studio requires a
-// rebuild to appear in production (a deploy webhook / draft mode comes later).
-const homepage = await sanityClient.fetch(
-  `*[_id == "homepage"][0]{
+const perspective = getPerspectiveCookie(Astro.cookies);
+const draftMode = Boolean(perspective);
+
+const { data: homepage } = await loadQuery<{
+  heroHeading?: string;
+  heroImage?: { alt?: string };
+  sections?: { _type: string }[];
+}>({
+  query: `*[_id == "homepage"][0]{
     heroHeading,
     heroImage,
     sections[]{ ..., _type }
   }`,
-);
+  perspective,
+});
 
 const heroImageUrl = homepage?.heroImage
   ? urlFor(homepage.heroImage).width(1600).height(900).fit('crop').url()
@@ -39,7 +51,7 @@ const heroImageUrl = homepage?.heroImage
             {homepage.heroHeading && <h1 class="hero__heading">{homepage.heroHeading}</h1>}
           </section>
 
-          {(homepage.sections ?? []).map((section: { _type: string }) => {
+          {(homepage.sections ?? []).map((section) => {
             const Block = blockComponents[section._type as keyof typeof blockComponents];
             return Block ? <Block block={section} /> : null;
           })}
@@ -48,12 +60,14 @@ const heroImageUrl = homepage?.heroImage
         <main class="empty">
           <h1>No homepage content yet</h1>
           <p>
-            Open the <a href="/admin">Studio</a>, fill in the Homepage document, publish, then
-            rebuild.
+            Open the <a href="/admin">Studio</a>, fill in the Homepage document, and publish.
           </p>
         </main>
       )
     }
+
+    {/* Click-to-edit overlays; only mounts when previewing drafts. */}
+    <VisualEditing enabled={draftMode} />
   </body>
 </html>
 
