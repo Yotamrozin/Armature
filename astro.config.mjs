@@ -45,6 +45,14 @@ export default defineConfig({
       // Embed Sanity Studio at /admin.
       studioBasePath: '/admin',
       useCdn: false,
+      // @sanity/astro defaults to hash-based Studio routing when `output` is
+      // 'static', which keeps the whole Studio on one prerendered page — but
+      // full-page links (like the click-to-edit "Open in Studio" overlay,
+      // which links to a literal /admin/intent/edit/... path) then 404,
+      // since nothing on the server knows that path. Force browser routing:
+      // we already run other routes on demand via the Vercel adapter, so a
+      // real catch-all SSR route for /admin/* works fine here.
+      studioRouterHistory: 'browser',
     }),
     react(),
   ],

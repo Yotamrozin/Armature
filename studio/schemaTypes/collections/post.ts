@@ -55,6 +55,14 @@ export const post = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'body',
+      title: 'Body',
+      type: 'array',
+      group: 'content',
+      of: [{ type: 'block' }],
+      description: 'The full content of the post, shown on the post page below the excerpt.',
+    }),
+    defineField({
       name: 'seo',
       title: 'SEO',
       type: 'seo',

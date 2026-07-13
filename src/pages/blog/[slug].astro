@@ -8,6 +8,7 @@ import { loadQuery } from '../../lib/sanity/loadQuery';
 import { getPerspectiveCookie } from '../../lib/sanity/draftMode';
 import { urlFor } from '../../lib/sanity/image';
 import { VisualEditing } from '@sanity/astro/visual-editing';
+import { PortableText } from '@portabletext/react';
 import type { PostCardData } from '../../lib/sanity/posts';
 
 const { slug } = Astro.params;
@@ -15,7 +16,11 @@ const perspective = getPerspectiveCookie(Astro.cookies);
 const draftMode = Boolean(perspective);
 
 const { data: post } = await loadQuery<
-  (PostCardData & { seo?: { title?: string; description?: string } }) | null
+  | (PostCardData & {
+      body?: unknown[];
+      seo?: { title?: string; description?: string };
+    })
+  | null
 >({
   query: `*[_type == "post" && slug.current == $slug][0]{
     title,
@@ -23,6 +28,7 @@ const { data: post } = await loadQuery<
     excerpt,
     mainImage,
     publishedAt,
+    body,
     seo
   }`,
   params: { slug },
@@ -67,6 +73,11 @@ const dateLabel = post?.publishedAt
           {dateLabel && <p class="post-detail__date">{dateLabel}</p>}
           <h1 class="post-detail__title">{post.title}</h1>
           {post.excerpt && <p class="post-detail__excerpt">{post.excerpt}</p>}
+          {post.body && post.body.length > 0 && (
+            <div class="post-detail__body">
+              <PortableText value={post.body as never} />
+            </div>
+          )}
         </main>
       ) : (
         <main class="post-detail post-detail--empty">
@@ -119,6 +130,32 @@ const dateLabel = post?.publishedAt
   .post-detail__excerpt {
     font-size: 1.1rem;
     color: #333;
+  }
+  .post-detail__body {
+    display: grid;
+    gap: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  .post-detail__body :global(h2),
+  .post-detail__body :global(h3),
+  .post-detail__body :global(h4) {
+    margin: 0.5rem 0 0;
+    line-height: 1.2;
+  }
+  .post-detail__body :global(p) {
+    margin: 0;
+  }
+  .post-detail__body :global(ul),
+  .post-detail__body :global(ol) {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+  .post-detail__body :global(blockquote) {
+    margin: 0;
+    padding-left: 1rem;
+    border-left: 3px solid #ddd;
+    color: #555;
   }
   .post-detail--empty {
     text-align: center;
