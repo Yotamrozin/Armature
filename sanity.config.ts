@@ -19,7 +19,7 @@ const dataset =
 // every "create another" surface, because Sanity otherwise treats any document
 // type as a collection an editor can add to — which would let a client create a
 // second homepage. Each id here is also the id the site's queries should read.
-const singletonTypes = new Set(['siteSettings', 'homepage']);
+const singletonTypes = new Set(['siteSettings', 'homepage', 'blogIndex', 'about', 'contact']);
 // The only document actions a singleton keeps: no duplicate, no delete (both
 // would break the "exactly one" guarantee).
 const singletonActions = new Set(['publish', 'discardChanges', 'restore']);
@@ -44,6 +44,18 @@ export default defineConfig({
               .title('Homepage')
               .id('homepage')
               .child(S.document().schemaType('homepage').documentId('homepage')),
+            S.listItem()
+              .title('Blog')
+              .id('blogIndex')
+              .child(S.document().schemaType('blogIndex').documentId('blogIndex')),
+            S.listItem()
+              .title('About')
+              .id('about')
+              .child(S.document().schemaType('about').documentId('about')),
+            S.listItem()
+              .title('Contact')
+              .id('contact')
+              .child(S.document().schemaType('contact').documentId('contact')),
             S.listItem()
               .title('Site Settings')
               .id('siteSettings')

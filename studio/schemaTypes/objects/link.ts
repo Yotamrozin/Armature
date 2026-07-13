@@ -37,7 +37,13 @@ export const link = defineType({
       type: 'reference',
       description: 'The page on this site to link to.',
       // Extend this list as more page singletons and collections are added.
-      to: [{ type: 'homepage' }],
+      to: [
+        { type: 'homepage' },
+        { type: 'blogIndex' },
+        { type: 'about' },
+        { type: 'contact' },
+        { type: 'post' },
+      ],
       hidden: ({ parent }) => parent?.linkType !== 'internal',
       validation: (rule) =>
         rule.custom((value, context) => {

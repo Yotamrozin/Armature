@@ -10,6 +10,9 @@ import { imageWithAlt } from './objects/image';
 // Singletons
 import { siteSettings } from './singletons/siteSettings';
 import { homepage } from './singletons/homepage';
+import { blogIndex } from './singletons/blogIndex';
+import { about } from './singletons/about';
+import { contact } from './singletons/contact';
 
 // Collections
 import { post } from './collections/post';
@@ -27,6 +30,9 @@ export const schemaTypes = [
   // Singletons
   siteSettings,
   homepage,
+  blogIndex,
+  about,
+  contact,
   // Collections
   post,
   // Blocks

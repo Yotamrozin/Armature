@@ -4,16 +4,15 @@
 // hybrid pattern used by / and the draft-mode API routes).
 export const prerender = false;
 
+import Layout from '../../layouts/Layout.astro';
 import { loadQuery } from '../../lib/sanity/loadQuery';
 import { getPerspectiveCookie } from '../../lib/sanity/draftMode';
 import { urlFor } from '../../lib/sanity/image';
-import { VisualEditing } from '@sanity/astro/visual-editing';
 import { PortableText } from '@portabletext/react';
 import type { PostCardData } from '../../lib/sanity/posts';
 
 const { slug } = Astro.params;
 const perspective = getPerspectiveCookie(Astro.cookies);
-const draftMode = Boolean(perspective);
 
 const { data: post } = await loadQuery<
   | (PostCardData & {
@@ -48,57 +47,38 @@ const dateLabel = post?.publishedAt
   : null;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{post?.seo?.title || post?.title || 'Post'}</title>
-    {
-      (post?.seo?.description || post?.excerpt) && (
-        <meta name="description" content={post?.seo?.description || post?.excerpt} />
-      )
-    }
-  </head>
-  <body>
-    {
-      post ? (
-        <main class="post-detail">
-          <a class="post-detail__back" href="/blog">
-            ← Back to blog
-          </a>
-          {imageUrl && <img class="post-detail__image" src={imageUrl} alt={post.mainImage?.alt ?? ''} />}
-          {dateLabel && <p class="post-detail__date">{dateLabel}</p>}
-          <h1 class="post-detail__title">{post.title}</h1>
-          {post.excerpt && <p class="post-detail__excerpt">{post.excerpt}</p>}
-          {post.body && post.body.length > 0 && (
-            <div class="post-detail__body">
-              <PortableText value={post.body as never} />
-            </div>
-          )}
-        </main>
-      ) : (
-        <main class="post-detail post-detail--empty">
-          <h1>Post not found</h1>
-          <p>
-            <a href="/blog">← Back to blog</a>
-          </p>
-        </main>
-      )
-    }
-
-    <VisualEditing enabled={draftMode} />
-  </body>
-</html>
+<Layout
+  title={post?.seo?.title || post?.title || 'Post'}
+  description={post?.seo?.description || post?.excerpt}
+>
+  {
+    post ? (
+      <main class="post-detail">
+        <a class="post-detail__back" href="/blog">
+          ← Back to blog
+        </a>
+        {imageUrl && <img class="post-detail__image" src={imageUrl} alt={post.mainImage?.alt ?? ''} />}
+        {dateLabel && <p class="post-detail__date">{dateLabel}</p>}
+        <h1 class="post-detail__title">{post.title}</h1>
+        {post.excerpt && <p class="post-detail__excerpt">{post.excerpt}</p>}
+        {post.body && post.body.length > 0 && (
+          <div class="post-detail__body">
+            <PortableText value={post.body as never} />
+          </div>
+        )}
+      </main>
+    ) : (
+      <main class="post-detail post-detail--empty">
+        <h1>Post not found</h1>
+        <p>
+          <a href="/blog">← Back to blog</a>
+        </p>
+      </main>
+    )
+  }
+</Layout>
 
 <style>
-  body {
-    font-family: system-ui, sans-serif;
-    margin: 0;
-    color: #111;
-  }
   .post-detail {
     max-width: 42rem;
     margin-inline: auto;

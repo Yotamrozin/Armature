@@ -4,14 +4,13 @@
 // appear without a rebuild.
 export const prerender = false;
 
+import Layout from '../layouts/Layout.astro';
 import { loadQuery } from '../lib/sanity/loadQuery';
 import { getPerspectiveCookie } from '../lib/sanity/draftMode';
 import { urlFor } from '../lib/sanity/image';
 import { blockComponents } from '../lib/blocks';
-import { VisualEditing } from '@sanity/astro/visual-editing';
 
 const perspective = getPerspectiveCookie(Astro.cookies);
-const draftMode = Boolean(perspective);
 
 const { data: homepage } = await loadQuery<{
   heroHeading?: string;
@@ -21,7 +20,13 @@ const { data: homepage } = await loadQuery<{
   query: `*[_id == "homepage"][0]{
     heroHeading,
     heroImage,
-    sections[]{ ..., _type }
+    sections[]{
+      ...,
+      _type,
+      _type == "hero" => {
+        cta{ ..., internal->{ _type, "slug": slug.current } }
+      }
+    }
   }`,
   perspective,
 });
@@ -31,52 +36,34 @@ const heroImageUrl = homepage?.heroImage
   : null;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{homepage?.heroHeading ?? 'Armature'}</title>
-  </head>
-  <body>
-    {
-      homepage ? (
-        <main>
-          <section class="hero">
-            {heroImageUrl && (
-              <img class="hero__image" src={heroImageUrl} alt={homepage.heroImage?.alt ?? ''} />
-            )}
-            {homepage.heroHeading && <h1 class="hero__heading">{homepage.heroHeading}</h1>}
-          </section>
+<Layout title={homepage?.heroHeading ?? 'Armature'}>
+  {
+    homepage ? (
+      <main>
+        <section class="hero">
+          {heroImageUrl && (
+            <img class="hero__image" src={heroImageUrl} alt={homepage.heroImage?.alt ?? ''} />
+          )}
+          {homepage.heroHeading && <h1 class="hero__heading">{homepage.heroHeading}</h1>}
+        </section>
 
-          {(homepage.sections ?? []).map((section) => {
-            const Block = blockComponents[section._type as keyof typeof blockComponents];
-            return Block ? <Block block={section} perspective={perspective} /> : null;
-          })}
-        </main>
-      ) : (
-        <main class="empty">
-          <h1>No homepage content yet</h1>
-          <p>
-            Open the <a href="/admin">Studio</a>, fill in the Homepage document, and publish.
-          </p>
-        </main>
-      )
-    }
-
-    {/* Click-to-edit overlays; only mounts when previewing drafts. */}
-    <VisualEditing enabled={draftMode} />
-  </body>
-</html>
+        {(homepage.sections ?? []).map((section) => {
+          const Block = blockComponents[section._type as keyof typeof blockComponents];
+          return Block ? <Block block={section} perspective={perspective} /> : null;
+        })}
+      </main>
+    ) : (
+      <main class="empty">
+        <h1>No homepage content yet</h1>
+        <p>
+          Open the <a href="/admin">Studio</a>, fill in the Homepage document, and publish.
+        </p>
+      </main>
+    )
+  }
+</Layout>
 
 <style>
-  body {
-    font-family: system-ui, sans-serif;
-    margin: 0;
-    color: #111;
-  }
   .hero {
     display: grid;
     gap: 1.5rem;
