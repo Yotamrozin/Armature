@@ -1,0 +1,127 @@
+---
+// Dynamic route, server-rendered (no getStaticPaths needed once prerender is
+// false — Astro resolves Astro.params.slug from the request at runtime, same
+// hybrid pattern used by / and the draft-mode API routes).
+export const prerender = false;
+
+import { loadQuery } from '../../lib/sanity/loadQuery';
+import { getPerspectiveCookie } from '../../lib/sanity/draftMode';
+import { urlFor } from '../../lib/sanity/image';
+import { VisualEditing } from '@sanity/astro/visual-editing';
+import type { PostCardData } from '../../lib/sanity/posts';
+
+const { slug } = Astro.params;
+const perspective = getPerspectiveCookie(Astro.cookies);
+const draftMode = Boolean(perspective);
+
+const { data: post } = await loadQuery<
+  (PostCardData & { seo?: { title?: string; description?: string } }) | null
+>({
+  query: `*[_type == "post" && slug.current == $slug][0]{
+    title,
+    "slug": slug.current,
+    excerpt,
+    mainImage,
+    publishedAt,
+    seo
+  }`,
+  params: { slug },
+  perspective,
+});
+
+const imageUrl = post?.mainImage
+  ? urlFor(post.mainImage).width(1600).height(900).fit('crop').url()
+  : null;
+
+const dateLabel = post?.publishedAt
+  ? new Date(post.publishedAt).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{post?.seo?.title || post?.title || 'Post'}</title>
+    {
+      (post?.seo?.description || post?.excerpt) && (
+        <meta name="description" content={post?.seo?.description || post?.excerpt} />
+      )
+    }
+  </head>
+  <body>
+    {
+      post ? (
+        <main class="post-detail">
+          <a class="post-detail__back" href="/blog">
+            ← Back to blog
+          </a>
+          {imageUrl && <img class="post-detail__image" src={imageUrl} alt={post.mainImage?.alt ?? ''} />}
+          {dateLabel && <p class="post-detail__date">{dateLabel}</p>}
+          <h1 class="post-detail__title">{post.title}</h1>
+          {post.excerpt && <p class="post-detail__excerpt">{post.excerpt}</p>}
+        </main>
+      ) : (
+        <main class="post-detail post-detail--empty">
+          <h1>Post not found</h1>
+          <p>
+            <a href="/blog">← Back to blog</a>
+          </p>
+        </main>
+      )
+    }
+
+    <VisualEditing enabled={draftMode} />
+  </body>
+</html>
+
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    color: #111;
+  }
+  .post-detail {
+    max-width: 42rem;
+    margin-inline: auto;
+    padding: 3rem 1.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+  .post-detail__back {
+    color: #555;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  .post-detail__image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    object-fit: cover;
+  }
+  .post-detail__date {
+    margin: 0;
+    color: #777;
+    font-size: 0.9rem;
+  }
+  .post-detail__title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.1;
+    margin: 0;
+  }
+  .post-detail__excerpt {
+    font-size: 1.1rem;
+    color: #333;
+  }
+  .post-detail--empty {
+    text-align: center;
+    color: #555;
+  }
+</style>

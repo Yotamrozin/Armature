@@ -11,8 +11,13 @@ import { imageWithAlt } from './objects/image';
 import { siteSettings } from './singletons/siteSettings';
 import { homepage } from './singletons/homepage';
 
+// Collections
+import { post } from './collections/post';
+
 // Blocks
 import { hero } from './blocks/hero';
+import { postFeatured } from './blocks/postFeatured';
+import { postList } from './blocks/postList';
 
 export const schemaTypes = [
   // Objects (reusable)
@@ -22,6 +27,10 @@ export const schemaTypes = [
   // Singletons
   siteSettings,
   homepage,
+  // Collections
+  post,
   // Blocks
   hero,
+  postFeatured,
+  postList,
 ];

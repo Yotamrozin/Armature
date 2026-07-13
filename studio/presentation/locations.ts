@@ -12,5 +12,14 @@ export const resolve: PresentationPluginOptions['resolve'] = {
         locations: [{ title: doc?.title || 'Homepage', href: '/' }],
       }),
     }),
+    post: defineLocations({
+      select: { title: 'title', slug: 'slug.current' },
+      resolve: (doc) => ({
+        locations: [
+          { title: doc?.title || 'Post', href: `/blog/${doc?.slug ?? ''}` },
+          { title: 'Blog', href: '/blog' },
+        ],
+      }),
+    }),
   },
 };

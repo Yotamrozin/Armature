@@ -34,8 +34,7 @@ export const homepage = defineType({
       title: 'Sections',
       type: 'array',
       group: 'sections',
-      // Only `hero` exists so far; add `gallery`, `quote`, etc. as blocks are built.
-      of: [{ type: 'hero' }],
+      of: [{ type: 'hero' }, { type: 'postFeatured' }, { type: 'postList' }],
       description: 'Optional stackable sections below the hero.',
     }),
     defineField({

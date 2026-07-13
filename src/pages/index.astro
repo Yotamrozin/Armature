@@ -53,7 +53,7 @@ const heroImageUrl = homepage?.heroImage
 
           {(homepage.sections ?? []).map((section) => {
             const Block = blockComponents[section._type as keyof typeof blockComponents];
-            return Block ? <Block block={section} /> : null;
+            return Block ? <Block block={section} perspective={perspective} /> : null;
           })}
         </main>
       ) : (
