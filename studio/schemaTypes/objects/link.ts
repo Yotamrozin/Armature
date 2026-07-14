@@ -35,7 +35,7 @@ export const link = defineType({
       name: 'internal',
       title: 'Internal page',
       type: 'reference',
-      description: 'The page on this site to link to.',
+      description: 'The page on this site to link to. Only shown when Link type above is set to "Internal page".',
       // Extend this list as more page singletons and collections are added.
       to: [
         { type: 'homepage' },
@@ -56,7 +56,8 @@ export const link = defineType({
       name: 'external',
       title: 'External URL',
       type: 'url',
-      description: 'The full URL to link to, including https://',
+      description:
+        'The full URL to link to, including https://. Only shown when Link type above is set to "External URL".',
       hidden: ({ parent }) => parent?.linkType !== 'external',
       validation: (rule) =>
         rule.custom((value, context) => {
@@ -66,4 +67,17 @@ export const link = defineType({
         }),
     }),
   ],
+  preview: {
+    // Without this, collapsed link items in an array (primaryNav, footerLinks,
+    // socialLinks) fall back to Sanity's generic "Untitled" — label isn't one
+    // of the field names Sanity guesses at automatically. Not showing the
+    // referenced page's own title here — page singletons don't share a common
+    // title-like field name (heroHeading vs heading vs ...), so that lookup
+    // would be fragile; linkType + the raw URL is enough to tell items apart.
+    select: { title: 'label', linkType: 'linkType', external: 'external' },
+    prepare: ({ title, linkType, external }) => ({
+      title: title || 'Untitled link',
+      subtitle: linkType === 'internal' ? 'Internal page' : external || 'External URL',
+    }),
+  },
 });

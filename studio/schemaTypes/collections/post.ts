@@ -1,4 +1,5 @@
 import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
+import { withEmptyHint } from '../../components/EmptyStateHint';
 
 // First collection type: many documents, each with a slug, listed and
 // detailed on the site (see SCHEMA-CONVENTIONS.md). Unlike singletons, this
@@ -63,6 +64,9 @@ export const post = defineType({
       group: 'content',
       of: [{ type: 'block' }],
       description: 'The full content of the post, shown on the post page below the excerpt.',
+      components: {
+        input: withEmptyHint('Empty — start typing to write the post.'),
+      },
     }),
     defineField({
       name: 'seo',

@@ -1,4 +1,5 @@
 import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
+import { withEmptyHint } from '../../components/EmptyStateHint';
 
 // Page singleton for /about. Fixed shape (heading, intro, image), with the
 // door left open for blocks via `sections`, same pattern as homepage.
@@ -44,6 +45,9 @@ export const about = defineType({
       group: 'sections',
       of: [{ type: 'hero' }, { type: 'postFeatured' }, { type: 'postList' }],
       description: 'Optional stackable sections below the intro.',
+      components: {
+        input: withEmptyHint('No sections yet — click "Add item" below to add one.'),
+      },
     }),
     defineField({
       name: 'seo',

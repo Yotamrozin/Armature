@@ -1,4 +1,5 @@
 import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
+import { withEmptyHint } from '../../components/EmptyStateHint';
 
 // The single global singleton: site-wide content used across every page.
 // There is exactly one of these.
@@ -37,6 +38,9 @@ export const siteSettings = defineType({
       of: [{ type: 'link' }],
       description: 'The main menu links, in order. Keep it short — up to about 7 items.',
       validation: (rule) => rule.max(7),
+      components: {
+        input: withEmptyHint('No nav links yet — click "Add item" below to add the first one.'),
+      },
     }),
     defineField({
       name: 'footerLinks',
@@ -45,6 +49,9 @@ export const siteSettings = defineType({
       group: 'navigation',
       of: [{ type: 'link' }],
       description: 'Secondary links shown in the site footer.',
+      components: {
+        input: withEmptyHint('No footer links yet — click "Add item" below to add one.'),
+      },
     }),
     defineField({
       name: 'socialLinks',
@@ -53,6 +60,9 @@ export const siteSettings = defineType({
       group: 'contact',
       of: [{ type: 'link' }],
       description: 'Links to social profiles.',
+      components: {
+        input: withEmptyHint('No social links yet — click "Add item" below to add one.'),
+      },
     }),
     defineField({
       name: 'email',

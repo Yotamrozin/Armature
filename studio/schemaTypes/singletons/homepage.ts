@@ -1,4 +1,5 @@
 import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
+import { withEmptyHint } from '../../components/EmptyStateHint';
 
 // Page singleton for the homepage. Fixed shape (named hero fields) with the door
 // left open for blocks via the `sections` array. There is exactly one of these.
@@ -39,6 +40,9 @@ export const homepage = defineType({
       group: 'sections',
       of: [{ type: 'hero' }, { type: 'postFeatured' }, { type: 'postList' }],
       description: 'Optional stackable sections below the hero.',
+      components: {
+        input: withEmptyHint('No sections yet — click "Add item" below to add one.'),
+      },
     }),
     defineField({
       name: 'seo',
