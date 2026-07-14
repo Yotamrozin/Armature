@@ -42,7 +42,19 @@ export async function loadQuery<T = unknown>({
         token,
         useCdn: false,
         perspective: parsePerspective(perspective) ?? 'drafts',
-        stega: { enabled: true, studioUrl: STUDIO_URL },
+        stega: {
+          enabled: true,
+          studioUrl: STUDIO_URL,
+          // siteSettings is the one global singleton (see SCHEMA-CONVENTIONS.md)
+          // — its fields render on every page via shared components like the
+          // navbar, so without this it shows up in Presentation's "Documents
+          // on this page" list for every single page, which reads as "which
+          // one is this page's actual content?" confusion. Page singletons
+          // (homepage, about, ...) are deliberately left stega-encoded, since
+          // for them the answer is genuinely "this page".
+          filter: (props) =>
+            props.sourceDocument._type === 'siteSettings' ? false : props.filterDefault(props),
+        },
       })
     : sanityClient;
 

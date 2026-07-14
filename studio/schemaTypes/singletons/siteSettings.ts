@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
 
 // The single global singleton: site-wide content used across every page.
 // There is exactly one of these.
@@ -7,7 +7,8 @@ export const siteSettings = defineType({
   title: 'Site Settings',
   type: 'document',
   groups: [
-    { name: 'general', title: 'General', default: true },
+    { ...ALL_FIELDS_GROUP, default: true },
+    { name: 'general', title: 'General' },
     { name: 'navigation', title: 'Navigation' },
     { name: 'contact', title: 'Contact & Social' },
     { name: 'seo', title: 'Default SEO' },

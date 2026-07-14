@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
 
 // First collection type: many documents, each with a slug, listed and
 // detailed on the site (see SCHEMA-CONVENTIONS.md). Unlike singletons, this
@@ -8,7 +8,8 @@ export const post = defineType({
   title: 'Post',
   type: 'document',
   groups: [
-    { name: 'content', title: 'Content', default: true },
+    { ...ALL_FIELDS_GROUP, default: true },
+    { name: 'content', title: 'Content' },
     { name: 'seo', title: 'SEO' },
   ],
   fields: [

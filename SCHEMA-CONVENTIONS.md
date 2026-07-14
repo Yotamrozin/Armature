@@ -76,7 +76,7 @@ Every field is a small contract with the client. Conventions:
 
 - **Describe every field.** Use `description` to say what the field is for and any constraints. For example: "The large heading at the top. Keep under about 60 characters."
 - **Validate.** Mark required fields required. Set max lengths where layout depends on it. Constrain what can go where.
-- **Group long documents.** Use fieldsets or groups so a page document reads as clear sections, not a wall of fields.
+- **Group long documents.** Use fieldsets or groups so a page document reads as clear sections, not a wall of fields. Make the auto-generated "All fields" tab the default (`{...ALL_FIELDS_GROUP, default: true}`, imported from `sanity`, as the first entry in `groups`) rather than whichever named group happens to be first — a client opening a document should see everything at a glance, with named tabs available for narrowing the view afterward, not the other way around.
 - **No orphan fields.** If a field exists in the schema it should render somewhere on the site. Editable fields that do nothing confuse clients.
 - **Constrain arrays.** Where a design holds three items, cap the array at three. The schema should mirror what the layout can actually take.
 - **Hide what's irrelevant.** When a field only matters conditional on another field's value, hide it (`hidden: ({ parent }) => ...`) instead of leaving it always visible. See `objects/link.ts`'s `internal`/`external` toggle — showing both regardless of `linkType` would just be confusing.

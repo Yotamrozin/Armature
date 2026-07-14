@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
 
 // Page singleton for the homepage. Fixed shape (named hero fields) with the door
 // left open for blocks via the `sections` array. There is exactly one of these.
@@ -8,7 +8,10 @@ export const homepage = defineType({
   title: 'Homepage',
   type: 'document',
   groups: [
-    { name: 'hero', title: 'Hero', default: true },
+    // Opens to the full document rather than the first tab — see
+    // SCHEMA-CONVENTIONS.md. Named tabs stay available for narrowing the view.
+    { ...ALL_FIELDS_GROUP, default: true },
+    { name: 'hero', title: 'Hero' },
     { name: 'sections', title: 'Sections' },
     { name: 'seo', title: 'SEO' },
   ],

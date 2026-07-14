@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
 
 // Page singleton for the /blog listing page. Unlike the individual `post`
 // documents it lists, /blog itself has no content unless something models it —
@@ -8,7 +8,8 @@ export const blogIndex = defineType({
   title: 'Blog',
   type: 'document',
   groups: [
-    { name: 'content', title: 'Content', default: true },
+    { ...ALL_FIELDS_GROUP, default: true },
+    { name: 'content', title: 'Content' },
     { name: 'seo', title: 'SEO' },
   ],
   fields: [

@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
 
 // Page singleton for /about. Fixed shape (heading, intro, image), with the
 // door left open for blocks via `sections`, same pattern as homepage.
@@ -7,7 +7,8 @@ export const about = defineType({
   title: 'About',
   type: 'document',
   groups: [
-    { name: 'content', title: 'Content', default: true },
+    { ...ALL_FIELDS_GROUP, default: true },
+    { name: 'content', title: 'Content' },
     { name: 'sections', title: 'Sections' },
     { name: 'seo', title: 'SEO' },
   ],

@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity';
 
 // Page singleton for /contact. Just a heading and intro — the actual contact
 // details (email, phone, address) live on siteSettings, since they're
@@ -8,7 +8,8 @@ export const contact = defineType({
   title: 'Contact',
   type: 'document',
   groups: [
-    { name: 'content', title: 'Content', default: true },
+    { ...ALL_FIELDS_GROUP, default: true },
+    { name: 'content', title: 'Content' },
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
