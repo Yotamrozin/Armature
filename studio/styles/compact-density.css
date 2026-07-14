@@ -17,11 +17,15 @@
  * project depends on it.
  */
 
-/* Tighter vertical rhythm between stacked fields/rows. @sanity/ui's Stack
-   applies spacing via margin-top on children; this caps it at a smaller,
-   fixed value regardless of the original `space` scale index used. This is
-   the one rule here I can actually justify from real inspection of the
-   library's compiled output — see the file header before adding more. */
-[data-ui='Stack'] > * + * {
-  margin-top: 12px !important;
+/* Tighter vertical rhythm between stacked fields/rows. Confirmed via the
+   compiled @sanity/ui source (dist/_chunks/tabList.js, StackComponent):
+   Stack is `display: grid` and spaces children with `gap` (CSS Grid gap),
+   not margin — an initial version of this override targeted margin-top and
+   had no effect at all, which is why it didn't visibly help. Sanity UI's
+   space scale ([0, 4, 8, 12, 20, 32, 52, 84, 136, 220]) means the top-level
+   field list (space={6}) renders a 52px gap between every field row; this
+   caps every Stack's gap at a smaller, fixed value regardless of the
+   original space index. */
+[data-ui='Stack'] {
+  gap: 12px !important;
 }
