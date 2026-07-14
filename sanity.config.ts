@@ -4,6 +4,7 @@ import { presentationTool } from 'sanity/presentation';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './studio/schemaTypes';
 import { resolve } from './studio/presentation/locations';
+import { withTooltipDescriptions } from './studio/components/TooltipDescriptionField';
 
 // Studio config for the Studio embedded at /admin (see astro.config.mjs).
 // Project credentials come from environment variables so they stay out of source.
@@ -84,6 +85,16 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  // Compact form layout (see studio/components/TooltipDescriptionField.tsx):
+  // short string/number fields with a description show it as a hover
+  // tooltip instead of a permanent paragraph under the label, applied
+  // globally by field shape rather than opted into per field.
+  form: {
+    components: {
+      field: withTooltipDescriptions,
+    },
   },
 
   document: {
