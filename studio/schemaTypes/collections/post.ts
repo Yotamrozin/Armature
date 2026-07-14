@@ -35,6 +35,7 @@ export const post = defineType({
       type: 'datetime',
       group: 'content',
       description: 'Used to order posts on the blog index and the latest-posts block.',
+      initialValue: () => new Date().toISOString(),
       validation: (rule) => rule.required(),
     }),
     defineField({

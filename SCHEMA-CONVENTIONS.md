@@ -79,6 +79,8 @@ Every field is a small contract with the client. Conventions:
 - **Group long documents.** Use fieldsets or groups so a page document reads as clear sections, not a wall of fields.
 - **No orphan fields.** If a field exists in the schema it should render somewhere on the site. Editable fields that do nothing confuse clients.
 - **Constrain arrays.** Where a design holds three items, cap the array at three. The schema should mirror what the layout can actually take.
+- **Hide what's irrelevant.** When a field only matters conditional on another field's value, hide it (`hidden: ({ parent }) => ...`) instead of leaving it always visible. See `objects/link.ts`'s `internal`/`external` toggle — showing both regardless of `linkType` would just be confusing.
+- **Default what's obvious.** If a field has an unambiguous sensible starting value — a block with one clear purpose (`postList`'s heading defaulting to "Latest Posts"), a page singleton's heading matching its own name (`about`'s heading defaulting to "About"), a date that's almost always "now" (`post.publishedAt`) — set `initialValue` so the editor isn't left staring at a blank field for something they'd type the same way every time. Don't default fields with no generic answer (site-specific copy, alt text, anything that would silently ship wrong if left unedited).
 
 ## Naming
 

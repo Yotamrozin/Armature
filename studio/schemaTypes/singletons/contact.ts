@@ -18,6 +18,7 @@ export const contact = defineType({
       type: 'string',
       group: 'content',
       description: 'The main heading at the top of the Contact page.',
+      initialValue: 'Contact',
       validation: (rule) => rule.required().max(80),
     }),
     defineField({

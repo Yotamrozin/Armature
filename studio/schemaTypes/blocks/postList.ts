@@ -13,7 +13,8 @@ export const postList = defineType({
       name: 'heading',
       title: 'Heading',
       type: 'string',
-      description: 'Optional heading shown above the list, e.g. "Latest posts".',
+      description: 'Optional heading shown above the list, e.g. "Latest Posts".',
+      initialValue: 'Latest Posts',
     }),
   ],
   preview: {

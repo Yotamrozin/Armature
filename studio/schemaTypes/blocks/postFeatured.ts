@@ -13,6 +13,7 @@ export const postFeatured = defineType({
       title: 'Heading',
       type: 'string',
       description: 'Optional heading shown above the featured post, e.g. "Featured".',
+      initialValue: 'Featured',
     }),
     defineField({
       name: 'post',

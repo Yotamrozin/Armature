@@ -18,6 +18,7 @@ export const about = defineType({
       type: 'string',
       group: 'content',
       description: 'The main heading at the top of the About page.',
+      initialValue: 'About',
       validation: (rule) => rule.required().max(80),
     }),
     defineField({
