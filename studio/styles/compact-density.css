@@ -1,0 +1,27 @@
+/*
+ * OPTIONAL, EASILY-REMOVABLE Studio density override.
+ *
+ * Sanity Studio's theme API (this version, sanity@6.4.0) has no supported
+ * lever for field/row spacing — verified against the actual type
+ * definitions, not raw CSS. This file is the accepted exception: raw CSS
+ * targeting @sanity/ui's `data-ui` attributes (a real, deliberate library
+ * convention — not hashed/generated class names — but still not a public
+ * API contract Sanity promises to keep stable).
+ *
+ * RISK: a future `sanity`/`@sanity/ui` version bump could change this
+ * markup and silently break these overrides (they'd just stop applying —
+ * fails safe back to Sanity's normal spacing, not visually broken).
+ *
+ * TO DISABLE: delete or comment out the import of this file in
+ * sanity.config.ts. That's the entire removal step — nothing else in the
+ * project depends on it.
+ */
+
+/* Tighter vertical rhythm between stacked fields/rows. @sanity/ui's Stack
+   applies spacing via margin-top on children; this caps it at a smaller,
+   fixed value regardless of the original `space` scale index used. This is
+   the one rule here I can actually justify from real inspection of the
+   library's compiled output — see the file header before adding more. */
+[data-ui='Stack'] > * + * {
+  margin-top: 12px !important;
+}

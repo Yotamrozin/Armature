@@ -5,6 +5,11 @@ import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './studio/schemaTypes';
 import { resolve } from './studio/presentation/locations';
 import { withTooltipDescriptions } from './studio/components/TooltipDescriptionField';
+// Optional, easily-removable spacing override — delete this one line to
+// fully disable it. See studio/styles/compact-density.css for what it does
+// and why (no supported theme lever for spacing exists in this Sanity
+// version, so this is raw CSS, accepted as a reversible risk).
+import './studio/styles/compact-density.css';
 
 // Studio config for the Studio embedded at /admin (see astro.config.mjs).
 // Project credentials come from environment variables so they stay out of source.
