@@ -5,6 +5,7 @@ import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './studio/schemaTypes';
 import { resolve } from './studio/presentation/locations';
 import { withTooltipDescriptions } from './studio/components/TooltipDescriptionField';
+import { PresentationHeader } from './studio/components/PresentationHeader';
 // Optional, easily-removable spacing override — delete this one line to
 // fully disable it. See studio/styles/compact-density.css for what it does
 // and why (no supported theme lever for spacing exists in this Sanity
@@ -83,6 +84,13 @@ export default defineConfig({
       previewUrl: {
         preview: '/',
         previewMode: { enable: '/api/draft-mode/enable' },
+      },
+      // Adds a "Site Settings" button to Presentation's own toolbar (see
+      // studio/components/PresentationHeader.tsx for why: siteSettings is
+      // excluded from stega/click-to-edit, so it otherwise has no path to
+      // editing from Presentation at all).
+      components: {
+        unstable_header: { component: PresentationHeader },
       },
     }),
     visionTool(),
